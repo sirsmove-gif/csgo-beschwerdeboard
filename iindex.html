@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CS:GO Beschwerden – SmoVe</title>
+<style>
+/* ===== Body Styles ===== */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+}
+
+/* ===== Header / Banner ===== */
+header {
+    background: url('https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/homepage/profile_community_header.jpg') center/cover no-repeat;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header h1 {
+    background: rgba(0,0,0,0.6);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 2.4rem;
+    color: #fff;
+}
+
+/* ===== Content Wrapper ===== */
+main {
+    max-width: 800px;
+    margin: -40px auto 40px auto;
+    padding: 0 20px;
+}
+
+/* ===== Form Box ===== */
+.box {
+    background: #1e1e1e;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 24px;
+}
+
+.box h2 {
+    margin-top: 0;
+    color: #ff8c00;
+}
+
+/* ===== Inputs ===== */
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 6px;
+    border: none;
+    background: #2a2a2a;
+    color: #fff;
+    font-size: 1rem;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* ===== Buttons ===== */
+button {
+    background-color: #0078d7;
+    color: #fff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #005fa3;
+}
+
+/* ===== Smiley Bar ===== */
+.smiley-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.smiley-buttons button {
+    padding: 6px 10px;
+    font-size: 1.2rem;
+}
+
+/* ===== Comments ===== */
+.comment {
+    border-top: 1px solid #2a2a2a;
+    padding: 12px 0;
+}
+
+.comment-header {
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.comment-text {
+    margin-top: 4px;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>CS:GO Beschwerden – SmoVe</h1>
+</header>
+
+<main>
+  <!-- Beschwerdeformular -->
+  <div class="box">
+    <h2>Hinterlasse deine Beschwerde</h2>
+    <form id="commentForm">
+        <input type="text" id="nickname" placeholder="Dein Nickname" required />
+        <textarea id="comment" rows="4" placeholder="Schreib hier..." required></textarea>
+
+        <div class="smiley-buttons">
+            <button type="button" onclick="addSmiley('😊')">😊</button>
+            <button type="button" onclick="addSmiley('😡')">😡</button>
+            <button type="button" onclick="addSmiley('😂')">😂</button>
+            <button type="button" onclick="addSmiley('😢')">😢</button>
+            <button type="button" onclick="addSmiley('👍')">👍</button>
+        </div>
+
+        <button type="submit">Absenden</button>
+    </form>
+  </div>
+
+  <!-- Kommentare Anzeige -->
+  <div class="box" id="commentsSection">
+    <h2>Kommentare</h2>
+    <!-- Dynamische Kommentare werden hier eingefügt -->
+  </div>
+</main>
+
+<script>
+const form = document.getElementById('commentForm');
+const commentsSection = document.getElementById('commentsSection');
+const commentInput = document.getElementById('comment');
+
+let comments = JSON.parse(localStorage.getItem('csgoComments') || '[]');
+
+function renderComments() {
+    commentsSection.innerHTML = '<h2>Kommentare</h2>';
+    comments.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'comment';
+        div.innerHTML = `
+            <div class="comment-header">${c.nickname} sagt:</div>
+            <div class="comment-text">${c.comment}</div>
+        `;
+        commentsSection.appendChild(div);
+    });
+}
+
+function addSmiley(sm) {
+    commentInput.value += sm + ' ';
+    commentInput.focus();
+}
+
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    const nickname = document.getElementById('nickname').value.trim();
+    const comment = commentInput.value.trim();
+    if (!nickname || !comment) return;
+
+    comments.push({nickname, comment});
+    localStorage.setItem('csgoComments', JSON.stringify(comments));
+    renderComments();
+    form.reset();
+});
+
+renderComments();
+</script>
+
+</body>
+</html>
