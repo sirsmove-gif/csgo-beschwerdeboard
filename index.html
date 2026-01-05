@@ -1,90 +1,320 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CS:GO Beschwerde Board</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="CS:GO Beschwerden – Schreibe deine Meinung / Beschwerde. Lokale Speicherung.">
+<title>CS:GO Beschwerden – SmoVe</title>
 <style>
-body { font-family: 'Segoe UI', sans-serif; background: #1c1c1c; color: #f0f0f0; margin:0; padding:0; }
-header { background: #2a2a2a; padding: 20px; text-align: center; font-size: 2em; font-weight: bold; }
-main { max-width: 600px; margin: 40px auto; padding: 20px; background: #2a2a2a; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.5);}
-form { display:flex; flex-direction:column; gap:10px;}
-input, textarea { padding:10px; border-radius:8px; border:none; font-size:1em;}
-textarea { resize: vertical; }
-button { background:#ff5722; color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-size:1em;}
-button:hover { background:#e64a19; }
-.comments { margin-top:30px; }
-.comment { background:#3a3a3a; padding:10px; border-radius:8px; margin-bottom:10px; }
-.comment-header { font-weight:bold; margin-bottom:5px; }
-.comment-text { white-space: pre-wrap; }
-.smiley-buttons { display:flex; gap:8px; flex-wrap:wrap; }
-.smiley-buttons button { font-size:1.2em; padding:5px 10px; }
+/* ===== Body Styles ===== */
+:root{
+  --bg:#121212; --card:#1e1e1e; --muted:#2a2a2a; --accent:#ff8c00; --btn:#0078d7; --btn-hover:#005fa3;
+  --text:#eee;
+}
+*{box-sizing:border-box}
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing:antialiased;
+}
+
+/* ===== Header / Banner ===== */
+header {
+    background: url('https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/homepage/profile_community_header.jpg') center/cover no-repeat;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header h1 {
+    background: rgba(0,0,0,0.6);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 2.0rem;
+    color: #fff;
+    margin:0;
+}
+
+/* ===== Content Wrapper ===== */
+main {
+    max-width: 900px;
+    margin: -40px auto 40px auto;
+    padding: 0 16px;
+}
+
+/* ===== Form Box ===== */
+.box {
+    background: var(--card);
+    border: 1px solid var(--muted);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 24px;
+}
+
+.box h2 {
+    margin-top: 0;
+    color: var(--accent);
+}
+
+/* ===== Inputs ===== */
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 6px;
+    border: none;
+    background: var(--muted);
+    color: #fff;
+    font-size: 1rem;
+}
+
+textarea { resize: vertical; min-height: 96px; }
+
+/* ===== Buttons ===== */
+button {
+    background-color: var(--btn);
+    color: #fff;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover { background-color: var(--btn-hover); }
+
+.smiley-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap:wrap;
+}
+
+.smiley-buttons button {
+    padding: 6px 10px;
+    font-size: 1.2rem;
+}
+
+/* ===== Comments ===== */
+.comment {
+    border-top: 1px solid var(--muted);
+    padding: 12px 0;
+}
+
+.comment-header {
+    font-weight: bold;
+    color: #ffd700;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.comment-meta { font-size:0.85rem; color:#bbb; font-weight:normal; }
+
+/* small helpers */
+.controls { display:flex; gap:8px; align-items:center; margin-top:8px; flex-wrap:wrap; }
+.right { margin-left:auto; }
+.small { font-size:0.9rem; color:#ccc; }
+.clear-btn { background:#b03a3a; }
+.clear-btn:hover { background:#8a2d2d; }
+
+.visually-hidden { position: absolute !important; left: -10000px !important; top:auto !important; width:1px !important; height:1px !important; overflow:hidden; }
 </style>
 </head>
 <body>
 
 <header>
-CS:GO Beschwerde Board - SmoVe
+    <h1>CS:GO Beschwerden – SmoVe</h1>
 </header>
 
 <main>
-<h2>Hinterlasse deine Beschwerde</h2>
-<form id="commentForm">
-    <input type="text" id="nickname" placeholder="Dein Nickname" required>
-    <textarea id="comment" rows="4" placeholder="Schreibe hier deine Beschwerde..." required></textarea>
-    <div class="smiley-buttons">
-        <button type="button" onclick="addSmiley('😊')">😊</button>
-        <button type="button" onclick="addSmiley('😡')">😡</button>
-        <button type="button" onclick="addSmiley('😂')">😂</button>
-        <button type="button" onclick="addSmiley('😢')">😢</button>
-        <button type="button" onclick="addSmiley('👍')">👍</button>
-    </div>
-    <button type="submit">Absenden</button>
-</form>
+  <div class="box" aria-labelledby="form-title">
+    <h2 id="form-title">Hinterlasse deine Beschwerde</h2>
 
-<div class="comments" id="commentsSection">
-    <h3>Kommentare:</h3>
-</div>
+    <form id="commentForm" autocomplete="off" novalidate>
+        <label class="visually-hidden" for="nickname">Dein Nickname</label>
+        <input type="text" id="nickname" name="nickname" placeholder="Dein Nickname" maxlength="30" required />
+
+        <label class="visually-hidden" for="comment">Dein Kommentar</label>
+        <textarea id="comment" name="comment" rows="4" placeholder="Schreib hier..." maxlength="1000" required></textarea>
+
+        <div class="smiley-buttons" role="group" aria-label="Smiley einfügen">
+            <button type="button" aria-label="Lächelnd" onclick="addSmiley('😊')">😊</button>
+            <button type="button" aria-label="Wütend" onclick="addSmiley('😡')">😡</button>
+            <button type="button" aria-label="Lachend" onclick="addSmiley('😂')">😂</button>
+            <button type="button" aria-label="Traurig" onclick="addSmiley('😢')">😢</button>
+            <button type="button" aria-label="Gefällt mir" onclick="addSmiley('👍')">👍</button>
+        </div>
+
+        <div class="controls">
+            <button type="submit">Absenden</button>
+            <button type="button" class="clear-btn" onclick="clearAllComments()">Alle löschen</button>
+            <div class="right small" id="commentsCount" aria-live="polite">0 Kommentare</div>
+        </div>
+        <div id="formError" class="small" role="alert" style="color:#f6a623; margin-top:8px;"></div>
+    </form>
+  </div>
+
+  <div class="box" id="commentsSection" aria-live="polite">
+    <h2>Kommentare</h2>
+    <!-- Dynamische Kommentare werden hier eingefügt -->
+  </div>
+</main>
+
+<noscript>
+  <div style="max-width:900px;margin:16px auto;padding:12px;background:#2a2a2a;border-radius:8px;color:#fff;">
+    Hinweis: Um Kommentare zu speichern, aktiviere bitte JavaScript.
+  </div>
+</noscript>
 
 <script>
+/*
+  Sicheres Rendern: wir verwenden keine innerHTML-Zuweisung für Benutzereingaben.
+  Stattdessen erstellen wir Textknoten und fügen <br> für neue Zeilen ein.
+*/
 const form = document.getElementById('commentForm');
 const commentsSection = document.getElementById('commentsSection');
 const commentInput = document.getElementById('comment');
+const nicknameInput = document.getElementById('nickname');
+const commentsCountEl = document.getElementById('commentsCount');
+const formError = document.getElementById('formError');
 
-// Kommentare aus LocalStorage laden
-let comments = JSON.parse(localStorage.getItem('csgoComments') || '[]');
-
-function renderComments() {
-    commentsSection.innerHTML = '<h3>Kommentare:</h3>';
-    comments.forEach(c => {
-        const commentDiv = document.createElement('div');
-        commentDiv.className = 'comment';
-        commentDiv.innerHTML = `
-            <div class="comment-header">${c.nickname} sagt:</div>
-            <div class="comment-text">${c.comment}</div>
-        `;
-        commentsSection.appendChild(commentDiv);
-    });
+let comments = [];
+try {
+  comments = JSON.parse(localStorage.getItem('csgoComments') || '[]');
+  if (!Array.isArray(comments)) comments = [];
+} catch (err) {
+  comments = [];
 }
 
-function addSmiley(smiley) {
-    commentInput.value += ' ' + smiley;
+function updateCount() {
+  const n = comments.length;
+  commentsCountEl.textContent = n + (n === 1 ? ' Kommentar' : ' Kommentare');
+}
+
+function sanitizeNewlinesToNodes(text) {
+  // returns a DocumentFragment with text nodes and <br> nodes
+  const frag = document.createDocumentFragment();
+  const parts = text.split(/\r?\n/);
+  parts.forEach((part, i) => {
+    frag.appendChild(document.createTextNode(part));
+    if (i < parts.length - 1) frag.appendChild(document.createElement('br'));
+  });
+  return frag;
+}
+
+function renderComments() {
+    // keep the top heading and re-render comments
+    commentsSection.innerHTML = '<h2>Kommentare</h2>';
+    if (comments.length === 0) {
+      const p = document.createElement('div');
+      p.className = 'small';
+      p.textContent = 'Noch keine Kommentare. Sei der Erste!';
+      commentsSection.appendChild(p);
+      updateCount();
+      return;
+    }
+    comments.forEach((c, idx) => {
+        const div = document.createElement('div');
+        div.className = 'comment';
+
+        const header = document.createElement('div');
+        header.className = 'comment-header';
+
+        const left = document.createElement('div');
+        left.style.display = 'flex';
+        left.style.flexDirection = 'column';
+        left.style.gap = '4px';
+
+        const nick = document.createElement('div');
+        nick.textContent = c.nickname + ' sagt:';
+        nick.style.fontWeight = '700';
+        nick.style.color = '#ffd700';
+        left.appendChild(nick);
+
+        const meta = document.createElement('div');
+        meta.className = 'comment-meta';
+        meta.textContent = new Date(c.ts).toLocaleString();
+        left.appendChild(meta);
+
+        const right = document.createElement('div');
+        right.style.marginLeft = '12px';
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Löschen';
+        delBtn.title = 'Diesen Kommentar löschen';
+        delBtn.style.background = '#444';
+        delBtn.style.padding = '6px 8px';
+        delBtn.style.borderRadius = '6px';
+        delBtn.style.border = 'none';
+        delBtn.style.color = '#fff';
+        delBtn.style.cursor = 'pointer';
+        delBtn.addEventListener('click', () => {
+          if (!confirm('Kommentar wirklich löschen?')) return;
+          comments.splice(idx,1);
+          persistAndRender();
+        });
+        right.appendChild(delBtn);
+
+        header.appendChild(left);
+        header.appendChild(right);
+
+        const textDiv = document.createElement('div');
+        textDiv.className = 'comment-text';
+        // safe insertion of text with line breaks
+        textDiv.appendChild(sanitizeNewlinesToNodes(c.comment));
+
+        div.appendChild(header);
+        div.appendChild(textDiv);
+        commentsSection.appendChild(div);
+    });
+    updateCount();
+}
+
+function addSmiley(sm) {
+    commentInput.value = (commentInput.value + (commentInput.value ? ' ' : '') + sm).trim();
     commentInput.focus();
 }
 
-form.addEventListener('submit', function(e){
-    e.preventDefault();
-    const nickname = document.getElementById('nickname').value.trim();
-    const comment = commentInput.value.trim();
-    if (!nickname || !comment) return;
-
-    const newComment = {nickname, comment};
-    comments.push(newComment);
+function persistAndRender() {
+  try {
     localStorage.setItem('csgoComments', JSON.stringify(comments));
-    renderComments();
+  } catch (err) {
+    console.error('localStorage error', err);
+    formError.textContent = 'Fehler beim Speichern der Kommentare (Speicher eventuell voll).';
+  }
+  renderComments();
+}
+
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    formError.textContent = '';
+    const nickname = nicknameInput.value.trim();
+    const comment = commentInput.value.trim();
+    if (!nickname) { formError.textContent = 'Bitte gib einen Nickname ein.'; nicknameInput.focus(); return; }
+    if (!comment) { formError.textContent = 'Bitte schreibe einen Kommentar.'; commentInput.focus(); return; }
+    if (nickname.length > 30) { formError.textContent = 'Nickname max. 30 Zeichen.'; nicknameInput.focus(); return; }
+    if (comment.length > 1000) { formError.textContent = 'Kommentar max. 1000 Zeichen.'; commentInput.focus(); return; }
+
+    const entry = { nickname, comment, ts: Date.now() };
+    comments.push(entry);
+    persistAndRender();
     form.reset();
+    nicknameInput.focus();
 });
 
+function clearAllComments() {
+  if (!confirm('Alle Kommentare wirklich löschen?')) return;
+  comments = [];
+  persistAndRender();
+}
+
+// initial render
 renderComments();
 </script>
 
